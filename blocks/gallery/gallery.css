@@ -5,6 +5,12 @@
   padding-bottom: 67px;
 }
 
+@media screen and (max-width: 1024px) {
+  .gallery {
+    padding: 0 19px 67px 19px;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .gallery {
     grid-template-columns: 1fr 1fr;
@@ -13,6 +19,7 @@
 
 @media screen and (max-width: 500px) {
   .gallery {
+    padding-bottom: 48px;
     grid-template-columns: 1fr;
   }
 }

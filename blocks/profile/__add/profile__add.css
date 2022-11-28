@@ -16,7 +16,7 @@
   opacity: .6;
 }
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 768px) {
   .profile__add {
     width: 100%;
     background-image: url(../../../images/plus-small.svg);
