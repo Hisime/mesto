@@ -1,0 +1,15 @@
+.popup__save {
+  width: 100%;
+  padding: 14px 0 18px 0;
+  cursor: pointer;
+  background-color: #000;
+  border-radius: 2px;
+  font-size: 18px;
+  line-height: 22px;
+  color: #fff;
+  transition: background-color .5s ease-out;
+}
+
+.popup__save:hover {
+  background-color: rgba(0,0,0,.8);
+}
