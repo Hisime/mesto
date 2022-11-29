@@ -17,52 +17,54 @@
         <img class="profile__image" src="images/profile.jpg" alt="Аватар">
         <div class="profile__info">
           <h1 class="profile__name">Жак-Ив Кусто</h1>
-          <button class="profile__edit" type="button"></button>
+          <button class="profile__edit" type="button" aria-label="Редактировать"></button>
           <p class="profile__description">Исследователь океана</p>
         </div>
-        <button class="profile__add" type="button"></button>
+        <button class="profile__add" type="button" aria-label="Добавить"></button>
       </section>
       <section class="gallery">
         <div class="gallery__item">
           <img class="gallery__image" src="images/kirill-pershin-1088404-unsplash.jpg" alt="Старинное здание в горах">
           <div class="gallery__bottom">
-            <p class="gallery__city">Карачаевск</p>
-            <button class="gallery__favorite" type="button"></button>
+            <h2 class="gallery__city">Карачаевск</h2>
+            <button class="gallery__favorite" type="button" aria-label="Добавить в избранное"></button>
           </div>
         </div>
         <div class="gallery__item">
-          <img class="gallery__image" src="images/kirill-pershin-1404681-unsplash.jpg" alt="Закат в горах">
+          <!-- <img class="gallery__image" src="images/kirill-pershin-1404681-unsplash.jpg" alt="Закат в горах"> -->
+          <img class="gallery__image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Moench_2339.jpg/1024px-Moench_2339.jpg" alt="Закат в горах">
+
           <div class="gallery__bottom">
-            <p class="gallery__city">Гора Эльбрус</p>
-            <button class="gallery__favorite" type="button"></button>
-          </div>
-        </div>
-        <div class="gallery__item">
-          <img class="gallery__image" src="images/kirill-pershin-1556355-unsplash.jpg" alt="Горы осенью">
-          <div class="gallery__bottom">
-            <p class="gallery__city">Домбай</p>
-            <button class="gallery__favorite" type="button"></button>
-          </div>
-        </div>
-        <div class="gallery__item">
-          <img class="gallery__image" src="images/kirill-pershin-1404681-unsplash.jpg" alt="Закат в горах">
-          <div class="gallery__bottom">
-            <p class="gallery__city">Гора Эльбрус</p>
-            <button class="gallery__favorite gallery__favorite_active" type="button"></button>
+            <h2 class="gallery__city">Гора Эльбрус</h2>
+            <button class="gallery__favorite" type="button" aria-label="Добавить в избранное"></button>
           </div>
         </div>
         <div class="gallery__item">
           <img class="gallery__image" src="images/kirill-pershin-1556355-unsplash.jpg" alt="Горы осенью">
           <div class="gallery__bottom">
-            <p class="gallery__city">Домбай</p>
-            <button class="gallery__favorite" type="button"></button>
+            <h2 class="gallery__city">Домбай</h2>
+            <button class="gallery__favorite" type="button" aria-label="Добавить в избранное"></button>
+          </div>
+        </div>
+        <div class="gallery__item">
+          <img class="gallery__image" src="images/kirill-pershin-1404681-unsplash.jpg" alt="Закат в горах">
+          <div class="gallery__bottom">
+            <h2 class="gallery__city">Гора Эльбрус</h2>
+            <button class="gallery__favorite gallery__favorite_active" aria-label="Добавить в избранное" type="button"></button>
+          </div>
+        </div>
+        <div class="gallery__item">
+          <img class="gallery__image" src="images/kirill-pershin-1556355-unsplash.jpg" alt="Горы осенью">
+          <div class="gallery__bottom">
+            <h2 class="gallery__city">Домбай</h2>
+            <button class="gallery__favorite" type="button" aria-label="Добавить в избранное"></button>
           </div>
         </div>
         <div class="gallery__item">
           <img class="gallery__image" src="images/kirill-pershin-1088404-unsplash.jpg" alt="Старинное здание в горах">
           <div class="gallery__bottom">
-            <p class="gallery__city">Карачаево-Черкесия</p>
-            <button class="gallery__favorite" type="button"></button>
+            <h2 class="gallery__city">Карачаево-Черкесия</h2>
+            <button class="gallery__favorite" type="button" aria-label="Добавить в избранное"></button>
           </div>
         </div>
       </section>
@@ -71,13 +73,15 @@
       <p class="footer__copyright">© 2022 Mesto Russia</p>
     </footer>
     <div class="popup">
-      <form class="popup__container">
+      <div class="popup__container">
         <h2 class="popup__title">Редактировать профиль</h2>
-        <input class="popup__input popup__input_name" type="text" placeholder="Имя">
-        <input class="popup__input popup__input_job" type="text" placeholder="О себе">
-        <button class="popup__save" type="submit">Сохранить</button>
-        <button class="popup__close" type="button"></button>
-      </form>
+        <form class="popup__form" name="form">
+          <input class="popup__input popup__input_type_name" name="input-name" type="text" placeholder="Имя">
+          <input class="popup__input popup__input_type_job" name="input-job" type="text" placeholder="О себе">
+          <button class="popup__save" type="submit">Сохранить</button>
+        </form>
+        <button class="popup__close" type="button" aria-label="Закрыть"></button>
+      </div>
     </div>
   </div>
   <script src="./scripts/index.js"></script>

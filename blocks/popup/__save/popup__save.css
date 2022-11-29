@@ -8,6 +8,7 @@
   line-height: 22px;
   color: #fff;
   transition: background-color .5s ease-out;
+  border: none;
 }
 
 .popup__save:hover {
