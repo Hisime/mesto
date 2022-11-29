@@ -14,8 +14,11 @@
   opacity: .6;
 }
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 768px) {
   .profile__edit {
+    position: absolute;
+    top: 8px;
+    margin-left: 10px;
     width: 18px;
     height: 18px;
     background-image: url(../../../images/edit-small.svg);
