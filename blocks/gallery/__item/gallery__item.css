@@ -1,4 +1,5 @@
 .gallery__item {
+  position: relative;
   overflow: hidden;
   border-radius: 10px;
 }
