@@ -28,3 +28,6 @@
 @import url("../blocks/popup/__close/popup__close.css");
 @import url("../blocks/popup/__save/popup__save.css");
 @import url("../blocks/popup/__title/popup__title.css");
+@import url("../blocks/popup/__image-container/popup__image-container.css");
+@import url("../blocks/popup/__photo-name/popup__photo-name.css");
+@import url("../blocks/popup/__image/popup__image.css");
