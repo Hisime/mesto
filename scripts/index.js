@@ -69,7 +69,6 @@ const addInitialValues = () => {
   jobInput.value = profileDescription.textContent;
 }
 
-addInitialValues();
 addButton.addEventListener('click', () => openPopup(popupAdd));
 
 const template = document.querySelector('#gallery-item-template');
@@ -131,4 +130,7 @@ const handleFormSubmit = (evt) => {
 }
 
 formElementEdit.addEventListener('submit', handleFormSubmit);
-editButton.addEventListener('click', () => openPopup(popupEdit));
+editButton.addEventListener('click', () => {
+  openPopup(popupEdit);
+  addInitialValues();
+});
