@@ -5,9 +5,12 @@ const jobInput =  formElementEdit.querySelector('.popup__input_type_job');
 
 const popupAdd = document.querySelector('.popup_type_add');
 const addFormElement = popupAdd.querySelector('.popup__form');
+const titleInput = addFormElement.querySelector('.popup__input_type_title');
+const linkInput = addFormElement.querySelector('.popup__input_type_link');
 
 const popupPhoto = document.querySelector('.popup_type_photo');
-
+const popupImage = popupPhoto.querySelector('.popup__image');
+const popupTitle = popupPhoto.querySelector('.popup__photo-name');
 
 const addButton = document.querySelector('.profile__add');
 const editButton = document.querySelector('.profile__edit');
@@ -72,7 +75,7 @@ addButton.addEventListener('click', () => openPopup(popupAdd));
 const template = document.querySelector('#gallery-item-template');
 const gallery = document.querySelector('.gallery');
 
-const generateCard = (name, link, prepend) => {
+const createCard = (name, link) => {
   const galleryItem = template.content.querySelector('.gallery__item').cloneNode(true);
   const galleryCity = galleryItem.querySelector('.gallery__city');
   const galleryImage = galleryItem.querySelector('.gallery__image');
@@ -89,8 +92,6 @@ const generateCard = (name, link, prepend) => {
     });
   }
   const generatePhotoPopup = () => {
-    const popupImage = document.querySelector('.popup__image');
-    const popupTitle = document.querySelector('.popup__photo-name');
     galleryImage.addEventListener('click', (event) => {
     const galleryCityName = event.target.closest('.gallery__item').querySelector('.gallery__city');
     openPopup(popupPhoto);
@@ -102,30 +103,22 @@ const generateCard = (name, link, prepend) => {
   galleryCity.textContent = name;
   galleryImage.alt = name;
   galleryImage.src = link;
-  if (prepend) {
-    gallery.prepend(galleryItem);
-  } else {
-    gallery.append(galleryItem);
-  }
   removeCard();
   addFavorite();
   generatePhotoPopup();
+  return galleryItem;
 };
 
-
 for (let i = 0; i < initialCards.length; i++) {
-  generateCard(initialCards[i].name, initialCards[i].link);
+  gallery.append(createCard(initialCards[i].name, initialCards[i].link));
 }
 
 
 const handleAddForm = (evt) => {
-  const titleInput = addFormElement.querySelector('.popup__input_type_title');
-  const linkInput = addFormElement.querySelector('.popup__input_type_link');
   evt.preventDefault();
-  generateCard(titleInput.value, linkInput.value, true);
+  gallery.prepend(createCard(titleInput.value, linkInput.value));
   closePopup(popupAdd);
-  titleInput.value = '';
-  linkInput.value = '';
+  evt.target.reset();
 }
 
 addFormElement.addEventListener('submit', handleAddForm)
