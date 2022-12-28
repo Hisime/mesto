@@ -8,14 +8,6 @@
   outline: none;
 }
 
-.popup__input:first-child {
-  margin-bottom: 23px;
-}
-
-.popup__input:nth-child(2) {
-  margin-bottom: 48px;
-}
-
 .popup__input::placeholder {
   color: #C4C4C4;
 }
