@@ -45,11 +45,19 @@ const initialCards = [
   }
 ];
 
-const closePopup = (popup) => {
-  popup.classList.remove('popup_opened');
+const closeByEsc = (evt) => {
+  if (evt.key === 'Escape' ){
+    closePopup();
+  }
+}
+
+const closePopup = () => {
+  document.removeEventListener('keydown', closeByEsc);
+  document.querySelector('.popup_opened').classList.remove('popup_opened');
 }
 
 const openPopup = (popup) => {
+  document.addEventListener('keydown', closeByEsc);
   popup.classList.add('popup_opened');
 };
 
@@ -57,8 +65,16 @@ const closePopups = () => {
   const closeButtons = document.querySelectorAll('.popup__close');
   for (let i = 0; i < closeButtons.length; i++) {
     closeButtons[i].addEventListener('click', (event) => {
-      closePopup(event.target.closest('.popup'));
+      closePopup();
     })
+  }
+  const popups = document.querySelectorAll('.popup');
+    for (let i = 0; i < popups.length; i++) {
+    popups[i].addEventListener('click', (event) => {
+      if (!event.target.closest('.popup__container')) {
+        closePopup();
+      }
+    });
   }
 }
 
@@ -69,7 +85,17 @@ const addInitialValues = () => {
   jobInput.value = profileDescription.textContent;
 }
 
-addButton.addEventListener('click', () => openPopup(popupAdd));
+addButton.addEventListener('click', () => {
+  openPopup(popupAdd);
+  enableValidation({
+    formSelector: '.popup_type_add',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__save',
+    inactiveButtonClass: 'popup__save_inactive',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__input-error_visible'
+  });
+});
 
 const template = document.querySelector('#gallery-item-template');
 const gallery = document.querySelector('.gallery');
@@ -116,7 +142,7 @@ for (let i = 0; i < initialCards.length; i++) {
 const handleAddForm = (evt) => {
   evt.preventDefault();
   gallery.prepend(createCard(titleInput.value, linkInput.value));
-  closePopup(popupAdd);
+  closePopup();
   evt.target.reset();
 }
 
@@ -126,11 +152,19 @@ const handleFormSubmit = (evt) => {
   evt.preventDefault();
   profileName.textContent = nameInput.value;
   profileDescription.textContent = jobInput.value;
-  closePopup(popupEdit);
+  closePopup();
 }
 
 formElementEdit.addEventListener('submit', handleFormSubmit);
 editButton.addEventListener('click', () => {
   openPopup(popupEdit);
   addInitialValues();
+  enableValidation({
+    formSelector: '.popup_type_edit',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__save',
+    inactiveButtonClass: 'popup__save_inactive',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__input-error_visible'
+  });
 });
