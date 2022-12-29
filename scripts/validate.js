@@ -18,11 +18,24 @@ const checkInputValidity = (form, input, config) => {
   }
 };
 
+const setButtonState = (form) => {
+  const inputs = Array.from(form.querySelectorAll(config.inputSelector));
+  const button = form.querySelector(config.submitButtonSelector);
+  toggleButtonState(inputs, button, config);
+  inputs.forEach((input) => {
+    checkInputValidity(form, input, config);
+  });
+};
+
 const toggleButtonState  = (inputs, button, config) => {
-  if (hasInvalidInput(inputs)) {
-    button.classList.add(config.inactiveButtonClass);
-  } else {
-    button.classList.remove(config.inactiveButtonClass);
+  if (button) {
+    if (hasInvalidInput(inputs)) {
+      button.classList.add(config.inactiveButtonClass);
+      button.setAttribute('disabled', 'disabled');
+    } else {
+      button.classList.remove(config.inactiveButtonClass);
+      button.removeAttribute('disabled');
+    }
   }
 };
 
@@ -46,9 +59,11 @@ const hasInvalidInput = (inputs) => {
 };
 
 const enableValidation = (config) => {
-  const form = document.querySelector(config.formSelector);
-  form.addEventListener('submit', (evt) => {
-    evt.preventDefault();
+  const forms = Array.from(document.querySelectorAll(config.formSelector));
+  forms.forEach((form) => {
+    form.addEventListener('submit', (evt) => {
+      evt.preventDefault();
+    });
+    setEventListeners(form, config);
   });
-  setEventListeners(form, config);
 };

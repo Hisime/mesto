@@ -71,7 +71,7 @@ const closePopups = () => {
   const popups = document.querySelectorAll('.popup');
     for (let i = 0; i < popups.length; i++) {
     popups[i].addEventListener('click', (event) => {
-      if (!event.target.closest('.popup__container')) {
+      if (!event.target.closest('.popup-wrapper')) {
         closePopup();
       }
     });
@@ -87,14 +87,6 @@ const addInitialValues = () => {
 
 addButton.addEventListener('click', () => {
   openPopup(popupAdd);
-  enableValidation({
-    formSelector: '.popup_type_add',
-    inputSelector: '.popup__input',
-    submitButtonSelector: '.popup__save',
-    inactiveButtonClass: 'popup__save_inactive',
-    inputErrorClass: 'popup__input_type_error',
-    errorClass: 'popup__input-error_visible'
-  });
 });
 
 const template = document.querySelector('#gallery-item-template');
@@ -159,12 +151,16 @@ formElementEdit.addEventListener('submit', handleFormSubmit);
 editButton.addEventListener('click', () => {
   openPopup(popupEdit);
   addInitialValues();
-  enableValidation({
-    formSelector: '.popup_type_edit',
-    inputSelector: '.popup__input',
-    submitButtonSelector: '.popup__save',
-    inactiveButtonClass: 'popup__save_inactive',
-    inputErrorClass: 'popup__input_type_error',
-    errorClass: 'popup__input-error_visible'
-  });
+  setButtonState(popupEdit);
 });
+
+const config = {
+  formSelector: '.popup',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__save',
+  inactiveButtonClass: 'popup__save_inactive',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__input-error_visible'
+}
+
+enableValidation(config)
