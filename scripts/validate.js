@@ -18,7 +18,7 @@ const checkInputValidity = (form, input, config) => {
   }
 };
 
-const setButtonState = (form) => {
+const resetValidation = (form) => {
   const inputs = Array.from(form.querySelectorAll(config.inputSelector));
   const button = form.querySelector(config.submitButtonSelector);
   toggleButtonState(inputs, button, config);
@@ -44,6 +44,11 @@ const setEventListeners = (form, config) => {
   const inputs = Array.from(form.querySelectorAll(config.inputSelector));
   const button = form.querySelector(config.submitButtonSelector);
   toggleButtonState(inputs, button, config);
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+     toggleButtonState(inputs, button, config);
+    }, 0);
+  });
   inputs.forEach((input) => {
     input.addEventListener('input', () => {
       checkInputValidity(form, input, config);
