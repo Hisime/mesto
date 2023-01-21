@@ -97,18 +97,18 @@ const createCard = (name, link) => {
   const galleryItem = template.content.querySelector('.gallery__item').cloneNode(true);
   const galleryCity = galleryItem.querySelector('.gallery__city');
   const galleryImage = galleryItem.querySelector('.gallery__image');
-  const removeCard = () => {
-    const deleteButton = galleryItem.querySelector('.gallery__delete-button');
-    deleteButton.addEventListener('click', (event) => {
-      event.target.closest('.gallery__item').remove();
-    });
-  }
-  const addFavorite = () => {
-    const favoriteButton = galleryItem.querySelector('.gallery__favorite');
-    favoriteButton.addEventListener('click', (event) => {
-      event.target.classList.toggle('gallery__favorite_active');
-    });
-  }
+  // const removeCard = () => {
+  //   const deleteButton = galleryItem.querySelector('.gallery__delete-button');
+  //   deleteButton.addEventListener('click', (event) => {
+  //     event.target.closest('.gallery__item').remove();
+  //   });
+  // }
+  // const addFavorite = () => {
+  //   const favoriteButton = galleryItem.querySelector('.gallery__favorite');
+  //   favoriteButton.addEventListener('click', (event) => {
+  //     event.target.classList.toggle('gallery__favorite_active');
+  //   });
+  // }
   const generatePhotoPopup = () => {
     galleryImage.addEventListener('click', (event) => {
     const galleryCityName = event.target.closest('.gallery__item').querySelector('.gallery__city');
@@ -118,18 +118,18 @@ const createCard = (name, link) => {
     popupTitle.textContent = name;
   })
   }
-  galleryCity.textContent = name;
-  galleryImage.alt = name;
-  galleryImage.src = link;
+  // galleryCity.textContent = name;
+  // galleryImage.alt = name;
+  // galleryImage.src = link;
   removeCard();
   addFavorite();
   generatePhotoPopup();
   return galleryItem;
 };
 
-for (let i = 0; i < initialCards.length; i++) {
-  gallery.append(createCard(initialCards[i].name, initialCards[i].link));
-}
+// for (let i = 0; i < initialCards.length; i++) {
+//   gallery.append(createCard(initialCards[i].name, initialCards[i].link));
+// }
 
 
 const handleAddForm = (evt) => {
@@ -165,3 +165,61 @@ const config = {
 }
 
 enableValidation(config)
+
+
+class Card {
+  constructor(data, templateSelector) {
+    this._name = data.name;
+    this._link = data.link;
+    this._templateSelector = templateSelector;
+  }
+
+  _getTemplate() {
+    const cardElement = document
+      .querySelector(this._templateSelector)
+      .content
+      .querySelector('.gallery__item')
+      .cloneNode(true);
+
+    return cardElement;
+  }
+
+  generateCard() {
+    this._element = this._getTemplate();
+    const galleryCity = this._element.querySelector('.gallery__city');
+    const galleryImage = this._element.querySelector('.gallery__image');
+
+    galleryCity.textContent = this._name;
+    galleryImage.alt = this._name;
+    galleryImage.src = this._link;
+    this._setEventListeners();
+
+    return this._element;
+  }
+
+  _setEventListeners() {
+    const favoriteButton = this._element.querySelector('.gallery__favorite');
+    favoriteButton.addEventListener('click', (event) => {
+      this._handleFavoriteClick(event);
+    });
+    const deleteButton = this._element.querySelector('.gallery__delete-button');
+    deleteButton.addEventListener('click', (event) => {
+      this._handleRemoveCardClick(event);
+    });
+  }
+
+  _handleFavoriteClick(event) {
+    event.target.classList.toggle('gallery__favorite_active');
+  }
+
+  _handleRemoveCardClick(event) {
+    event.target.closest('.gallery__item').remove();
+  }
+}
+
+initialCards.forEach((item) => {
+  const card = new Card(item, '#gallery-item-template');
+  const cardElement = card.generateCard();
+
+  gallery.append(cardElement);
+});
