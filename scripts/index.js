@@ -93,45 +93,6 @@ addButton.addEventListener('click', () => {
 const template = document.querySelector('#gallery-item-template');
 const gallery = document.querySelector('.gallery');
 
-const createCard = (name, link) => {
-  const galleryItem = template.content.querySelector('.gallery__item').cloneNode(true);
-  const galleryCity = galleryItem.querySelector('.gallery__city');
-  const galleryImage = galleryItem.querySelector('.gallery__image');
-  // const removeCard = () => {
-  //   const deleteButton = galleryItem.querySelector('.gallery__delete-button');
-  //   deleteButton.addEventListener('click', (event) => {
-  //     event.target.closest('.gallery__item').remove();
-  //   });
-  // }
-  // const addFavorite = () => {
-  //   const favoriteButton = galleryItem.querySelector('.gallery__favorite');
-  //   favoriteButton.addEventListener('click', (event) => {
-  //     event.target.classList.toggle('gallery__favorite_active');
-  //   });
-  // }
-  const generatePhotoPopup = () => {
-    galleryImage.addEventListener('click', (event) => {
-    const galleryCityName = event.target.closest('.gallery__item').querySelector('.gallery__city');
-    openPopup(popupPhoto);
-    popupImage.src = link;
-    popupImage.alt = name;
-    popupTitle.textContent = name;
-  })
-  }
-  // galleryCity.textContent = name;
-  // galleryImage.alt = name;
-  // galleryImage.src = link;
-  removeCard();
-  addFavorite();
-  generatePhotoPopup();
-  return galleryItem;
-};
-
-// for (let i = 0; i < initialCards.length; i++) {
-//   gallery.append(createCard(initialCards[i].name, initialCards[i].link));
-// }
-
-
 const handleAddForm = (evt) => {
   evt.preventDefault();
   gallery.prepend(createCard(titleInput.value, linkInput.value));
@@ -164,7 +125,7 @@ const config = {
   errorClass: 'popup__input-error_visible'
 }
 
-enableValidation(config)
+// enableValidation(config)
 
 
 class Card {
@@ -206,7 +167,12 @@ class Card {
     deleteButton.addEventListener('click', (event) => {
       this._handleRemoveCardClick(event);
     });
-  }
+
+    const galleryImage = this._element.querySelector('.gallery__image');
+    galleryImage.addEventListener('click', (event) => {
+      this._handleGalleryPopupClick(event);
+    })
+  };
 
   _handleFavoriteClick(event) {
     event.target.classList.toggle('gallery__favorite_active');
@@ -215,7 +181,14 @@ class Card {
   _handleRemoveCardClick(event) {
     event.target.closest('.gallery__item').remove();
   }
-}
+
+  _handleGalleryPopupClick() {
+    openPopup(popupPhoto);
+    popupImage.src = this._link;
+    popupImage.alt = this._name;
+    popupTitle.textContent = this._name;
+  };
+ }
 
 initialCards.forEach((item) => {
   const card = new Card(item, '#gallery-item-template');
