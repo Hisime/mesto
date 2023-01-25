@@ -1,3 +1,7 @@
+import  { FormValidator } from './FormValidator.js';
+import  { Card } from './Card.js';
+
+
 const popupEdit = document.querySelector('.popup_type_edit');
 const profileForm = document.forms['profile-form'];
 const nameInput = profileForm.querySelector('.popup__input_type_name');
@@ -7,10 +11,6 @@ const popupAdd = document.querySelector('.popup_type_add');
 const cardForm = document.forms['add-card-form'];
 const titleInput = cardForm.querySelector('.popup__input_type_title');
 const linkInput = cardForm.querySelector('.popup__input_type_link');
-
-const popupPhoto = document.querySelector('.popup_type_photo');
-const popupImage = popupPhoto.querySelector('.popup__image');
-const popupTitle = popupPhoto.querySelector('.popup__photo-name');
 
 const addButton = document.querySelector('.profile__add');
 const editButton = document.querySelector('.profile__edit');
@@ -59,7 +59,7 @@ const closePopup = () => {
   }
 }
 
-const openPopup = (popup) => {
+export const openPopup = (popup) => {
   document.addEventListener('keydown', closeByEsc);
   popup.classList.add('popup_opened');
 };
@@ -95,7 +95,13 @@ const gallery = document.querySelector('.gallery');
 
 const handleAddForm = (evt) => {
   evt.preventDefault();
-  gallery.prepend(createCard(titleInput.value, linkInput.value));
+  const item = {
+    name: titleInput.value,
+    link: linkInput.value
+  };
+  const card = new Card(item, '#gallery-item-template');
+  const cardElement = card.generateCard();
+  gallery.prepend(cardElement);
   closePopup();
   evt.target.reset();
 }
@@ -116,6 +122,20 @@ editButton.addEventListener('click', () => {
   resetValidation(popupEdit);
 });
 
+const resetValidation = (form) => {
+  const validator = new FormValidator(config, form);
+  validator.resetValidation();
+};
+
+const enableValidation = (config) => {
+  const forms = Array.from(document.querySelectorAll(config.formSelector));
+  forms.forEach((form) => {
+
+    const validator = new FormValidator(config, form);
+    validator.enableValidation();
+  });
+};
+
 const config = {
   formSelector: '.popup',
   inputSelector: '.popup__input',
@@ -125,70 +145,8 @@ const config = {
   errorClass: 'popup__input-error_visible'
 }
 
-// enableValidation(config)
+enableValidation(config)
 
-
-class Card {
-  constructor(data, templateSelector) {
-    this._name = data.name;
-    this._link = data.link;
-    this._templateSelector = templateSelector;
-  }
-
-  _getTemplate() {
-    const cardElement = document
-      .querySelector(this._templateSelector)
-      .content
-      .querySelector('.gallery__item')
-      .cloneNode(true);
-
-    return cardElement;
-  }
-
-  generateCard() {
-    this._element = this._getTemplate();
-    const galleryCity = this._element.querySelector('.gallery__city');
-    const galleryImage = this._element.querySelector('.gallery__image');
-
-    galleryCity.textContent = this._name;
-    galleryImage.alt = this._name;
-    galleryImage.src = this._link;
-    this._setEventListeners();
-
-    return this._element;
-  }
-
-  _setEventListeners() {
-    const favoriteButton = this._element.querySelector('.gallery__favorite');
-    favoriteButton.addEventListener('click', (event) => {
-      this._handleFavoriteClick(event);
-    });
-    const deleteButton = this._element.querySelector('.gallery__delete-button');
-    deleteButton.addEventListener('click', (event) => {
-      this._handleRemoveCardClick(event);
-    });
-
-    const galleryImage = this._element.querySelector('.gallery__image');
-    galleryImage.addEventListener('click', (event) => {
-      this._handleGalleryPopupClick(event);
-    })
-  };
-
-  _handleFavoriteClick(event) {
-    event.target.classList.toggle('gallery__favorite_active');
-  }
-
-  _handleRemoveCardClick(event) {
-    event.target.closest('.gallery__item').remove();
-  }
-
-  _handleGalleryPopupClick() {
-    openPopup(popupPhoto);
-    popupImage.src = this._link;
-    popupImage.alt = this._name;
-    popupTitle.textContent = this._name;
-  };
- }
 
 initialCards.forEach((item) => {
   const card = new Card(item, '#gallery-item-template');
