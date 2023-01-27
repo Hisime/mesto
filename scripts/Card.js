@@ -1,5 +1,9 @@
 import { openPopup } from './index.js';
 
+const popupPhoto = document.querySelector('.popup_type_photo');
+const popupImage = popupPhoto.querySelector('.popup__image');
+const popupTitle = popupPhoto.querySelector('.popup__photo-name');
+
 export class Card {
   constructor(data, templateSelector) {
     this._name = data.name;
@@ -19,12 +23,12 @@ export class Card {
 
   generateCard() {
     this._element = this._getTemplate();
+    this._galleryImage = this._element.querySelector('.gallery__image');
     const galleryCity = this._element.querySelector('.gallery__city');
-    const galleryImage = this._element.querySelector('.gallery__image');
 
     galleryCity.textContent = this._name;
-    galleryImage.alt = this._name;
-    galleryImage.src = this._link;
+    this._galleryImage.alt = this._name;
+    this._galleryImage.src = this._link;
     this._setEventListeners();
 
     return this._element;
@@ -40,8 +44,7 @@ export class Card {
       this._handleRemoveCardClick(event);
     });
 
-    const galleryImage = this._element.querySelector('.gallery__image');
-    galleryImage.addEventListener('click', (event) => {
+    this._galleryImage.addEventListener('click', (event) => {
       this._handleGalleryPopupClick(event);
     })
   };
@@ -55,9 +58,6 @@ export class Card {
   }
 
   _handleGalleryPopupClick() {
-    const popupPhoto = document.querySelector('.popup_type_photo');
-    const popupImage = popupPhoto.querySelector('.popup__image');
-    const popupTitle = popupPhoto.querySelector('.popup__photo-name');
     openPopup(popupPhoto);
     popupImage.src = this._link;
     popupImage.alt = this._name;

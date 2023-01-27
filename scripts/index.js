@@ -1,6 +1,14 @@
 import  { FormValidator } from './FormValidator.js';
 import  { Card } from './Card.js';
 
+const config = {
+  formSelector: '.popup',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__save',
+  inactiveButtonClass: 'popup__save_inactive',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__input-error_visible'
+}
 
 const popupEdit = document.querySelector('.popup_type_edit');
 const profileForm = document.forms['profile-form'];
@@ -17,6 +25,8 @@ const editButton = document.querySelector('.profile__edit');
 const profileName = document.querySelector('.profile__name');
 const profileDescription = document.querySelector('.profile__description');
 
+const validatorEditProfile = new FormValidator(config, profileForm);
+const validatorAddCard = new FormValidator(config, cardForm);
 
 const initialCards = [
   {
@@ -93,15 +103,19 @@ addButton.addEventListener('click', () => {
 const template = document.querySelector('#gallery-item-template');
 const gallery = document.querySelector('.gallery');
 
+const createCard = (item) => {
+  const card = new Card(item, '#gallery-item-template');
+  const cardElement = card.generateCard();
+  return cardElement;
+}
+
 const handleAddForm = (evt) => {
   evt.preventDefault();
   const item = {
     name: titleInput.value,
     link: linkInput.value
   };
-  const card = new Card(item, '#gallery-item-template');
-  const cardElement = card.generateCard();
-  gallery.prepend(cardElement);
+  gallery.prepend(createCard(item));
   closePopup();
   evt.target.reset();
 }
@@ -119,38 +133,21 @@ profileForm.addEventListener('submit', handleProfileFormSubmit);
 editButton.addEventListener('click', () => {
   openPopup(popupEdit);
   addInitialValues();
-  resetValidation(popupEdit);
+  validatorEditProfile.resetValidation();
 });
 
-const resetValidation = (form) => {
-  const validator = new FormValidator(config, form);
-  validator.resetValidation();
+const enableValidation = () => {
+  validatorEditProfile.enableValidation();
+  validatorAddCard.enableValidation();
 };
 
-const enableValidation = (config) => {
-  const forms = Array.from(document.querySelectorAll(config.formSelector));
-  forms.forEach((form) => {
-
-    const validator = new FormValidator(config, form);
-    validator.enableValidation();
-  });
-};
-
-const config = {
-  formSelector: '.popup',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__save',
-  inactiveButtonClass: 'popup__save_inactive',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__input-error_visible'
-}
-
-enableValidation(config)
+enableValidation()
 
 
 initialCards.forEach((item) => {
-  const card = new Card(item, '#gallery-item-template');
-  const cardElement = card.generateCard();
-
-  gallery.append(cardElement);
+  gallery.append(createCard(item));
 });
+
+function handleCardClick(name, link) {
+
+}
