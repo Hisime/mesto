@@ -25,8 +25,9 @@ const editButton = document.querySelector('.profile__edit');
 const profileName = document.querySelector('.profile__name');
 const profileDescription = document.querySelector('.profile__description');
 
-const validatorEditProfile = new FormValidator(config, profileForm);
-const validatorAddCard = new FormValidator(config, cardForm);
+const popupPhoto = document.querySelector('.popup_type_photo');
+const popupImage = popupPhoto.querySelector('.popup__image');
+const popupTitle = popupPhoto.querySelector('.popup__photo-name');
 
 const initialCards = [
   {
@@ -69,7 +70,14 @@ const closePopup = () => {
   }
 }
 
-export const openPopup = (popup) => {
+const handleCardClick = (name, link) => {
+  openPopup(popupPhoto);
+  popupImage.src = link;
+  popupImage.alt = name;
+  popupTitle.textContent = name;
+};
+
+const openPopup = (popup) => {
   document.addEventListener('keydown', closeByEsc);
   popup.classList.add('popup_opened');
 };
@@ -104,10 +112,27 @@ const template = document.querySelector('#gallery-item-template');
 const gallery = document.querySelector('.gallery');
 
 const createCard = (item) => {
-  const card = new Card(item, '#gallery-item-template');
+  const card = new Card(item, '#gallery-item-template', handleCardClick);
   const cardElement = card.generateCard();
   return cardElement;
 }
+
+
+const formValidators = {}
+
+const enableValidation = (config) => {
+  const popupList = Array.from(document.querySelectorAll(config.formSelector));
+  popupList.forEach((formElement) => {
+    if (formElement.querySelector('form')) {
+      const validator = new FormValidator(config, formElement);
+      const formName = formElement.querySelector('form').getAttribute('name');
+      formValidators[formName] = validator;
+      validator.enableValidation();
+    }
+  });
+};
+
+enableValidation(config);
 
 const handleAddForm = (evt) => {
   evt.preventDefault();
@@ -133,21 +158,11 @@ profileForm.addEventListener('submit', handleProfileFormSubmit);
 editButton.addEventListener('click', () => {
   openPopup(popupEdit);
   addInitialValues();
-  validatorEditProfile.resetValidation();
+  formValidators['profile-form'].resetValidation();
 });
 
-const enableValidation = () => {
-  validatorEditProfile.enableValidation();
-  validatorAddCard.enableValidation();
-};
-
-enableValidation()
 
 
 initialCards.forEach((item) => {
   gallery.append(createCard(item));
 });
-
-function handleCardClick(name, link) {
-
-}

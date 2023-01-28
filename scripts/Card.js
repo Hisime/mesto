@@ -1,14 +1,9 @@
-import { openPopup } from './index.js';
-
-const popupPhoto = document.querySelector('.popup_type_photo');
-const popupImage = popupPhoto.querySelector('.popup__image');
-const popupTitle = popupPhoto.querySelector('.popup__photo-name');
-
 export class Card {
-  constructor(data, templateSelector) {
+  constructor(data, templateSelector, handleCardClick) {
     this._name = data.name;
     this._link = data.link;
     this._templateSelector = templateSelector;
+    this._handleCardClick = handleCardClick;
   }
 
   _getTemplate() {
@@ -45,7 +40,7 @@ export class Card {
     });
 
     this._galleryImage.addEventListener('click', (event) => {
-      this._handleGalleryPopupClick(event);
+      this._handleCardClick(this._name, this._link);
     })
   };
 
@@ -57,10 +52,4 @@ export class Card {
     event.target.closest('.gallery__item').remove();
   }
 
-  _handleGalleryPopupClick() {
-    openPopup(popupPhoto);
-    popupImage.src = this._link;
-    popupImage.alt = this._name;
-    popupTitle.textContent = this._name;
-  };
  }
