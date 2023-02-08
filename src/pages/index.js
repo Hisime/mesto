@@ -1,5 +1,6 @@
-import  { FormValidator } from './FormValidator.js';
-import  { Card } from './Card.js';
+import  { FormValidator } from '../components/FormValidator.js';
+import  { Card } from '../components/Card.js';
+import './index.css';
 
 const config = {
   formSelector: '.popup',
