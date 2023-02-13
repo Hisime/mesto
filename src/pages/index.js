@@ -6,7 +6,7 @@ import {PopupWithForm} from "../components/PopupWithForm";
 import {UserInfo} from "../components/UserInfo";
 import {Section} from "../components/Section";
 
-const config = {
+const validationConfig = {
   formSelector: '.popup',
   inputSelector: '.popup__input',
   submitButtonSelector: '.popup__save',
@@ -19,15 +19,15 @@ const profileForm = document.forms['profile-form'];
 const nameInput = profileForm.querySelector('.popup__input_type_name');
 const jobInput =  profileForm.querySelector('.popup__input_type_job');
 
-const addButton = document.querySelector('.profile__add');
+const buttonAddCard = document.querySelector('.profile__add');
 const editButton = document.querySelector('.profile__edit');
 
-const handleAddForm = (evt, title, link) => {
+const handleCardFormSubmit = (evt, title, link) => {
   const item = {
     name: title,
     link: link
   };
-  section.addItem(createCard(item), true);
+  cardsSection.addItem(createCard(item), true);
 }
 
 
@@ -63,30 +63,30 @@ const initialCards = [
 ];
 
 
-const createCard = (item) => {
-  const card = new Card(item, '#gallery-item-template', (name, link) => imagePopup.open(name, link));
+const createCard = (cardData) => {
+  const card = new Card(cardData, '#gallery-item-template', (name, link) => imagePopup.open(name, link));
   const cardElement = card.generateCard();
   return cardElement;
 }
 
 
-const addPopup = new PopupWithForm('.popup_type_add', handleAddForm);
+const addPopup = new PopupWithForm('.popup_type_add', handleCardFormSubmit);
 const editProfilePopup = new PopupWithForm('.popup_type_edit', handleProfileFormSubmit);
 const imagePopup = new PopupWithImage('.popup_type_photo');
 const userInfo = new UserInfo({userName: '.profile__name', userInfo: '.profile__description'});
-const section = new Section({items: initialCards, renderer: createCard}, '.gallery');
+const cardsSection = new Section({items: initialCards, renderer: createCard}, '.gallery');
 
 [addPopup, editProfilePopup, imagePopup].forEach( (item) => {
   item.setEventListeners()
 });
 
-const addInitialValues = () => {
+const initProfileFormInputs = () => {
   const userData = userInfo.getUserInfo();
   nameInput.value = userData.userName;
   jobInput.value = userData.userInfo;
 }
 
-addButton.addEventListener('click', () => {
+buttonAddCard.addEventListener('click', () => {
   addPopup.open()
 });
 
@@ -104,10 +104,10 @@ const enableValidation = (config) => {
   });
 };
 
-enableValidation(config);
+enableValidation(validationConfig);
 
 editButton.addEventListener('click', () => {
   editProfilePopup.open()
-  addInitialValues();
+  initProfileFormInputs();
   formValidators['profile-form'].resetValidation();
 });
