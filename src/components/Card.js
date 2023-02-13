@@ -4,6 +4,11 @@ export class Card {
     this._link = data.link;
     this._templateSelector = templateSelector;
     this._handleCardClick = handleCardClick;
+    this._element = this._getTemplate();
+    this._favoriteButton = this._element.querySelector('.gallery__favorite');
+    this._buttonDelete = this._element.querySelector('.gallery__delete-button');
+    this._galleryImage = this._element.querySelector('.gallery__image');
+    this._galleryCity = this._element.querySelector('.gallery__city');
   }
 
   _getTemplate() {
@@ -17,11 +22,7 @@ export class Card {
   }
 
   generateCard() {
-    this._element = this._getTemplate();
-    this._galleryImage = this._element.querySelector('.gallery__image');
-    const galleryCity = this._element.querySelector('.gallery__city');
-
-    galleryCity.textContent = this._name;
+    this._galleryCity.textContent = this._name;
     this._galleryImage.alt = this._name;
     this._galleryImage.src = this._link;
     this._setEventListeners();
@@ -30,12 +31,10 @@ export class Card {
   }
 
   _setEventListeners() {
-    const favoriteButton = this._element.querySelector('.gallery__favorite');
-    favoriteButton.addEventListener('click', (event) => {
+    this._favoriteButton.addEventListener('click', (event) => {
       this._handleFavoriteClick(event);
     });
-    const deleteButton = this._element.querySelector('.gallery__delete-button');
-    deleteButton.addEventListener('click', (event) => {
+    this._buttonDelete.addEventListener('click', (event) => {
       this._handleRemoveCardClick(event);
     });
 
@@ -48,8 +47,9 @@ export class Card {
     event.target.classList.toggle('gallery__favorite_active');
   }
 
-  _handleRemoveCardClick(event) {
-    event.target.closest('.gallery__item').remove();
+  _handleRemoveCardClick() {
+    this._element.closest('.gallery__item').remove();
+    this._element = null;
   }
 
  }
