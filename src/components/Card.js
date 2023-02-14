@@ -48,7 +48,7 @@ export class Card {
   }
 
   _handleRemoveCardClick() {
-    this._element.closest('.gallery__item').remove();
+    this._element.remove();
     this._element = null;
   }
 
