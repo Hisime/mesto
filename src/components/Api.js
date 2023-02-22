@@ -27,4 +27,13 @@ export class Api {
     })
       .then(res => res.json());
   }
+
+  addCard({name, link}) {
+    return fetch(`${this.baseUrl}/cards`, {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify({name, link})
+    })
+      .then(res => res.json());
+  }
 }

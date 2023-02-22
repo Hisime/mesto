@@ -17,12 +17,13 @@ const api = new Api({
 });
 
 const handleCardFormSubmit = (evt, data) => {
-  const item = {
-    name: data['input-title'],
-    link: data['input-link']
-  };
-  cardsSection.addItem(createCard(item), true);
-  popupAddCard.close();
+  api.addCard({name:data['input-title'], link: data['input-link']})
+    .then(
+      (res) => {
+        cardsSection.addItem(createCard(res), true);
+        popupAddCard.close();
+      }
+      );
 }
 const handleProfileFormSubmit = (evt, data) => {
   api.editProfile({name: data['input-name'], about: data['input-job']});

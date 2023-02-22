@@ -7,6 +7,7 @@
   border: none;
   transition: opacity 0.5s ease-out;
   flex-shrink: 0;
+  margin-bottom: 2px;
 }
 
 .gallery__favorite:not(.gallery__favorite_active):hover {
