@@ -1,0 +1,23 @@
+.profile__edit-avatar {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: transparent;
+  border: none;
+  background-image: url(../../../images/edit.svg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 26px 26px;
+  z-index: 1;
+  cursor: pointer;
+  transition: opacity .5s ease-out;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.profile__edit-avatar:hover {
+  opacity: .6;
+}
