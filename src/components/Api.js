@@ -36,4 +36,12 @@ export class Api {
     })
       .then(res => res.json());
   }
+
+  deleteCard(id) {
+    return fetch(`${this.baseUrl}/cards/${id}`, {
+      method: 'DELETE',
+      headers: this.headers,
+    })
+      .then(res => res.json());
+  }
 }

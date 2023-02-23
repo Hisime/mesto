@@ -7,6 +7,7 @@ import {PopupWithForm} from "../components/PopupWithForm";
 import {UserInfo} from "../components/UserInfo";
 import {Section} from "../components/Section";
 import {Api} from "../components/Api";
+import {PopupWithConfirmation} from "../components/PopupWithConfirmation";
 
 const api = new Api({
   baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-60',
@@ -26,13 +27,29 @@ const handleCardFormSubmit = (evt, data) => {
       );
 }
 const handleProfileFormSubmit = (evt, data) => {
-  api.editProfile({name: data['input-name'], about: data['input-job']});
-  userInfo.setUserInfo({userName: data['input-name'], userInfo: data['input-job']});
-  popupEditProfile.close();
+  api.editProfile({name: data['input-name'], about: data['input-job']})
+    .then((res) => {
+      userInfo.setUserInfo({userName: res.name, userInfo: res.about, userId: res._id});
+      popupEditProfile.close();
+    });
+}
+
+const handleRemoveCardClick = (confirmAction, id) => {
+  api.deleteCard(id)
+    .then((res) => {
+      confirmationPopup.open(() => {
+        confirmAction();
+        confirmationPopup.close();
+      });
+    });
 }
 
 const createCard = (cardData) => {
-  const card = new Card(cardData, '#gallery-item-template', (name, link) => imagePopup.open(name, link));
+  const card = new Card(cardData,
+    '#gallery-item-template',
+    (name, link) => imagePopup.open(name, link),
+    userInfo.getUserInfo().userId,
+    handleRemoveCardClick);
   const cardElement = card.generateCard();
   return cardElement;
 }
@@ -40,18 +57,28 @@ const createCard = (cardData) => {
 const popupAddCard = new PopupWithForm('.popup_type_add', handleCardFormSubmit);
 const popupEditProfile = new PopupWithForm('.popup_type_edit', handleProfileFormSubmit);
 const imagePopup = new PopupWithImage('.popup_type_photo');
-const userInfo = new UserInfo({userName: '.profile__name', userInfo: '.profile__description', userAvatar: '.profile__image'}, api);
-userInfo.initServerInfo();
+const confirmationPopup = new PopupWithConfirmation('.popup_type_confirm');
+const userInfo = new UserInfo({userName: '.profile__name', userInfo: '.profile__description', userAvatar: '.profile__image'});
+api.getUser()
+  .then((res) => {
+    userInfo.setUserInfo({
+      userName: res.name,
+      userInfo: res.about,
+      userId: res._id
+    });
+    userInfo.setAvatar(res.avatar)
+  })
+  .then(() => api.getCards())
+  .then(
+    (res) => {
+      cardsSection = new Section({items: res, renderer: createCard}, '.gallery');
+      cardsSection.renderElements();
+    }
+  );
+
 let cardsSection;
 
-api.getCards().then(
-  (res) => {
-    cardsSection = new Section({items: res, renderer: createCard}, '.gallery');
-    cardsSection.renderElements();
-  }
-);
-
-[popupAddCard, popupEditProfile, imagePopup].forEach( (item) => {
+[popupAddCard, popupEditProfile, imagePopup, confirmationPopup].forEach( (item) => {
   item.setEventListeners()
 });
 
