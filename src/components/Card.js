@@ -1,7 +1,6 @@
-import {PopupWithConfirmation} from "./PopupWithConfirmation";
 
 export class Card {
-  constructor(data, templateSelector, handleCardClick, userId, handleRemoveCardClick) {
+  constructor(data, templateSelector, handleCardClick, userId, handleRemoveCardClick, handleFavoriteClick) {
     this._userId = userId;
     this._name = data.name;
     this._link = data.link;
@@ -17,6 +16,7 @@ export class Card {
     this._galleryCity = this._element.querySelector('.gallery__city');
     this._likesSelector = this._element.querySelector('.gallery__like');
     this._handleRemoveCardClick = handleRemoveCardClick;
+    this._handleFavoriteClick = handleFavoriteClick;
   }
 
   _getTemplate() {
@@ -37,14 +37,25 @@ export class Card {
     if (this._userId !== this._cardOwnerId) {
       this._buttonDelete.remove();
     }
+    if (this._likes.find((item) => {
+      return this._userId === item._id;
+    })) {
+      this._favoriteButton.classList.add('gallery__favorite_active');
+    }
     this._setEventListeners();
 
     return this._element;
   }
 
   _setEventListeners() {
-    this._favoriteButton.addEventListener('click', (event) => {
-      this._handleFavoriteClick(event);
+    this._favoriteButton.addEventListener('click', () => {
+      this._handleFavoriteClick(this._cardId,  this._favoriteButton.classList.contains('gallery__favorite_active'))
+        .then((res) => {
+          this._likes = res.likes;
+          this._likesSelector.textContent = this._likes.length;
+          this._favoriteButton.classList.toggle('gallery__favorite_active');
+        })
+      ;
     });
     this._buttonDelete.addEventListener('click', (event) => {
       this._handleRemoveCardClick(() => this._removeCard(), this._cardId);
@@ -54,10 +65,6 @@ export class Card {
       this._handleCardClick(this._name, this._link);
     })
   };
-
-  _handleFavoriteClick(event) {
-    event.target.classList.toggle('gallery__favorite_active');
-  }
 
   _removeCard() {
     this._element.remove();

@@ -1,4 +1,12 @@
-import { validationConfig, nameInput, jobInput, buttonAddCard, buttonEditProfile, initialCards} from '../utils/constants';
+import {
+  validationConfig,
+  nameInput,
+  jobInput,
+  buttonAddCard,
+  buttonEditProfile,
+  initialCards,
+  buttonEditAvatar
+} from '../utils/constants';
 import  { FormValidator } from '../components/FormValidator.js';
 import  { Card } from '../components/Card.js';
 import './index.css';
@@ -34,9 +42,13 @@ const handleProfileFormSubmit = (evt, data) => {
     });
 }
 
+const handleAvatarFormSubmit = (evt, data) => {
+  api.changeAvatar(data['avatar-link'])
+}
+
 const handleRemoveCardClick = (confirmAction, id) => {
   api.deleteCard(id)
-    .then((res) => {
+    .then(() => {
       confirmationPopup.open(() => {
         confirmAction();
         confirmationPopup.close();
@@ -44,12 +56,17 @@ const handleRemoveCardClick = (confirmAction, id) => {
     });
 }
 
+const handleFavoriteClick = (id, isLiked) => {
+  return isLiked ? api.removeLike(id) : api.addLike(id);
+}
+
 const createCard = (cardData) => {
   const card = new Card(cardData,
     '#gallery-item-template',
     (name, link) => imagePopup.open(name, link),
     userInfo.getUserInfo().userId,
-    handleRemoveCardClick);
+    handleRemoveCardClick,
+    handleFavoriteClick);
   const cardElement = card.generateCard();
   return cardElement;
 }
@@ -58,6 +75,7 @@ const popupAddCard = new PopupWithForm('.popup_type_add', handleCardFormSubmit);
 const popupEditProfile = new PopupWithForm('.popup_type_edit', handleProfileFormSubmit);
 const imagePopup = new PopupWithImage('.popup_type_photo');
 const confirmationPopup = new PopupWithConfirmation('.popup_type_confirm');
+const avatarPopup = new PopupWithForm('.popup_type_avatar', handleAvatarFormSubmit)
 const userInfo = new UserInfo({userName: '.profile__name', userInfo: '.profile__description', userAvatar: '.profile__image'});
 api.getUser()
   .then((res) => {
@@ -78,7 +96,7 @@ api.getUser()
 
 let cardsSection;
 
-[popupAddCard, popupEditProfile, imagePopup, confirmationPopup].forEach( (item) => {
+[popupAddCard, popupEditProfile, imagePopup, confirmationPopup, avatarPopup].forEach( (item) => {
   item.setEventListeners()
 });
 
@@ -113,3 +131,7 @@ buttonEditProfile.addEventListener('click', () => {
 buttonAddCard.addEventListener('click', () => {
   popupAddCard.open()
 });
+
+buttonEditAvatar.addEventListener('click', () => {
+  avatarPopup.open()
+})

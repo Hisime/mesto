@@ -13,6 +13,7 @@ const jobInput =  profileForm.querySelector('.popup__input_type_job');
 
 const buttonAddCard = document.querySelector('.profile__add');
 const buttonEditProfile = document.querySelector('.profile__edit');
+const buttonEditAvatar = document.querySelector('.profile__edit-avatar');
 
 const initialCards = [
   {
@@ -41,4 +42,4 @@ const initialCards = [
   }
 ];
 
-export {validationConfig, nameInput, jobInput, buttonAddCard, buttonEditProfile, initialCards}
+export {validationConfig, nameInput, jobInput, buttonAddCard, buttonEditProfile, initialCards, buttonEditAvatar}

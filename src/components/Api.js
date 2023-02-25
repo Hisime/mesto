@@ -44,4 +44,29 @@ export class Api {
     })
       .then(res => res.json());
   }
+
+  addLike(id) {
+    return fetch(`${this.baseUrl}/cards/${id}/likes`, {
+      method: 'PUT',
+      headers: this.headers,
+    })
+      .then(res => res.json());
+  }
+
+  removeLike(id) {
+    return fetch (`${this.baseUrl}/cards/${id}/likes`, {
+      method: 'DELETE',
+      headers: this.headers,
+    })
+      .then(res => res.json());
+  }
+
+  changeAvatar(avatar) {
+    return fetch (`${this.baseUrl}/users/me/avatar`, {
+      method: 'PATCH',
+      headers: this.headers,
+      body: JSON.stringify({avatar})
+    })
+      .then(res => res.json());
+  }
 }
