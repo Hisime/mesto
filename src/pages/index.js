@@ -26,34 +26,48 @@ const api = new Api({
 });
 
 const handleCardFormSubmit = (evt, data) => {
+  popupAddCard.setSubmitToLoading();
   api.addCard({name:data['input-title'], link: data['input-link']})
     .then(
       (res) => {
         cardsSection.addItem(createCard(res), true);
         popupAddCard.close();
-      }
-      );
+      })
+    .finally(() => {
+      popupAddCard.setTextToSubmitButton('Создать');
+    })
 }
 const handleProfileFormSubmit = (evt, data) => {
+  popupEditProfile.setSubmitToLoading();
   api.editProfile({name: data['input-name'], about: data['input-job']})
     .then((res) => {
       userInfo.setUserInfo({userName: res.name, userInfo: res.about, userId: res._id});
       popupEditProfile.close();
-    });
+    })
+    .finally(() => {
+      popupEditProfile.setTextToSubmitButton('Сохранить');
+    })
 }
 
 const handleAvatarFormSubmit = (evt, data) => {
+  avatarPopup.setSubmitToLoading();
   api.changeAvatar(data['avatar-link'])
+    .then((res) => {
+      userInfo.setAvatar(res.avatar);
+      avatarPopup.close()
+    })
+    .finally(() => {
+      avatarPopup.setTextToSubmitButton('Сохранить');
+    })
 }
 
 const handleRemoveCardClick = (confirmAction, id) => {
-  api.deleteCard(id)
-    .then(() => {
-      confirmationPopup.open(() => {
-        confirmAction();
-        confirmationPopup.close();
-      });
-    });
+  confirmationPopup.open(() => {
+    api.deleteCard(id).then(() => {
+      confirmAction();
+      confirmationPopup.close();
+    })
+  })
 }
 
 const handleFavoriteClick = (id, isLiked) => {
