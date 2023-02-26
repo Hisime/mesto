@@ -1,14 +1,11 @@
 import {
   validationConfig,
-  nameInput,
-  jobInput,
   buttonAddCard,
   buttonEditProfile,
-  initialCards,
   buttonEditAvatar
 } from '../utils/constants';
-import  { FormValidator } from '../components/FormValidator.js';
-import  { Card } from '../components/Card.js';
+import {FormValidator} from '../components/FormValidator.js';
+import {Card} from '../components/Card.js';
 import './index.css';
 import {PopupWithImage} from "../components/PopupWithImage";
 import {PopupWithForm} from "../components/PopupWithForm";
@@ -26,39 +23,58 @@ const api = new Api({
 });
 
 const handleCardFormSubmit = (evt, data) => {
-  popupAddCard.setSubmitToLoading();
-  api.addCard({name:data['input-title'], link: data['input-link']})
+  popupAddCard.renderLoading(true);
+  api.addCard({name: data['input-title'], link: data['input-link']})
     .then(
       (res) => {
-        cardsSection.addItem(createCard(res), true);
+        cardsSection.addItem(res, true);
         popupAddCard.close();
       })
     .finally(() => {
-      popupAddCard.setTextToSubmitButton('Создать');
+      popupAddCard.renderLoading();
     })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 const handleProfileFormSubmit = (evt, data) => {
-  popupEditProfile.setSubmitToLoading();
+  popupEditProfile.renderLoading(true);
   api.editProfile({name: data['input-name'], about: data['input-job']})
     .then((res) => {
-      userInfo.setUserInfo({userName: res.name, userInfo: res.about, userId: res._id});
+      userInfo.setUserInfo({
+        userName: res.name,
+        userInfo: res.about,
+        userId: res._id,
+        userAvatar: res.avatar
+      });
       popupEditProfile.close();
     })
     .finally(() => {
-      popupEditProfile.setTextToSubmitButton('Сохранить');
+      popupEditProfile.renderLoading();
     })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 const handleAvatarFormSubmit = (evt, data) => {
-  avatarPopup.setSubmitToLoading();
+  avatarPopup.renderLoading(true);
   api.changeAvatar(data['avatar-link'])
     .then((res) => {
-      userInfo.setAvatar(res.avatar);
+      userInfo.setUserInfo({
+        userName: res.name,
+        userInfo: res.about,
+        userId: res._id,
+        userAvatar: res.avatar
+      });
       avatarPopup.close()
     })
     .finally(() => {
-      avatarPopup.setTextToSubmitButton('Сохранить');
+      avatarPopup.renderLoading();
     })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 const handleRemoveCardClick = (confirmAction, id) => {
@@ -90,35 +106,33 @@ const popupEditProfile = new PopupWithForm('.popup_type_edit', handleProfileForm
 const imagePopup = new PopupWithImage('.popup_type_photo');
 const confirmationPopup = new PopupWithConfirmation('.popup_type_confirm');
 const avatarPopup = new PopupWithForm('.popup_type_avatar', handleAvatarFormSubmit)
-const userInfo = new UserInfo({userName: '.profile__name', userInfo: '.profile__description', userAvatar: '.profile__image'});
-api.getUser()
-  .then((res) => {
-    userInfo.setUserInfo({
-      userName: res.name,
-      userInfo: res.about,
-      userId: res._id
-    });
-    userInfo.setAvatar(res.avatar)
-  })
-  .then(() => api.getCards())
-  .then(
-    (res) => {
-      cardsSection = new Section({items: res, renderer: createCard}, '.gallery');
-      cardsSection.renderElements();
-    }
-  );
-
+const userInfo = new UserInfo({
+  userName: '.profile__name',
+  userInfo: '.profile__description',
+  userAvatar: '.profile__image'
+});
 let cardsSection;
 
-[popupAddCard, popupEditProfile, imagePopup, confirmationPopup, avatarPopup].forEach( (item) => {
+Promise.all([api.getUser(), api.getCards()])
+  .then(([user, cards]) => {
+    userInfo.setUserInfo({
+      userName: user.name,
+      userInfo: user.about,
+      userId: user._id,
+      userAvatar: user.avatar
+    });
+
+    cardsSection = new Section({items: cards, renderer: createCard}, '.gallery');
+    cardsSection.renderElements();
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+
+[popupAddCard, popupEditProfile, imagePopup, confirmationPopup, avatarPopup].forEach((item) => {
   item.setEventListeners()
 });
-
-const initProfileFormInputs = () => {
-  const userData = userInfo.getUserInfo();
-  nameInput.value = userData.userName;
-  jobInput.value = userData.userInfo;
-}
 
 const formValidators = {}
 
@@ -138,7 +152,11 @@ enableValidation(validationConfig);
 
 buttonEditProfile.addEventListener('click', () => {
   popupEditProfile.open()
-  initProfileFormInputs();
+  const userData = userInfo.getUserInfo();
+  popupEditProfile.setInputValues({
+    'input-name': userData.userName,
+    'input-job': userData.userInfo,
+  });
   formValidators['profile-form'].resetValidation();
 });
 

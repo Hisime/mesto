@@ -14,7 +14,7 @@ export class Card {
     this._buttonDelete = this._element.querySelector('.gallery__delete-button');
     this._galleryImage = this._element.querySelector('.gallery__image');
     this._galleryCity = this._element.querySelector('.gallery__city');
-    this._likesSelector = this._element.querySelector('.gallery__like');
+    this._likesCounter = this._element.querySelector('.gallery__like');
     this._handleRemoveCardClick = handleRemoveCardClick;
     this._handleFavoriteClick = handleFavoriteClick;
   }
@@ -33,7 +33,7 @@ export class Card {
     this._galleryCity.textContent = this._name;
     this._galleryImage.alt = this._name;
     this._galleryImage.src = this._link;
-    this._likesSelector.textContent = this._likes.length;
+    this._likesCounter.textContent = this._likes.length;
     if (this._userId !== this._cardOwnerId) {
       this._buttonDelete.remove();
     }
@@ -52,10 +52,12 @@ export class Card {
       this._handleFavoriteClick(this._cardId,  this._favoriteButton.classList.contains('gallery__favorite_active'))
         .then((res) => {
           this._likes = res.likes;
-          this._likesSelector.textContent = this._likes.length;
+          this._likesCounter.textContent = this._likes.length;
           this._favoriteButton.classList.toggle('gallery__favorite_active');
         })
-      ;
+        .catch((err) => {
+        console.log(err);
+      });
     });
     this._buttonDelete.addEventListener('click', (event) => {
       this._handleRemoveCardClick(() => this._removeCard(), this._cardId);

@@ -7,10 +7,6 @@ const validationConfig = {
   errorClass: 'popup__input-error_visible'
 }
 
-const profileForm = document.forms['profile-form'];
-const nameInput = profileForm.querySelector('.popup__input_type_name');
-const jobInput =  profileForm.querySelector('.popup__input_type_job');
-
 const buttonAddCard = document.querySelector('.profile__add');
 const buttonEditProfile = document.querySelector('.profile__edit');
 const buttonEditAvatar = document.querySelector('.profile__edit-avatar');
@@ -42,4 +38,4 @@ const initialCards = [
   }
 ];
 
-export {validationConfig, nameInput, jobInput, buttonAddCard, buttonEditProfile, initialCards, buttonEditAvatar}
+export {validationConfig, buttonAddCard, buttonEditProfile, initialCards, buttonEditAvatar}

@@ -9,17 +9,14 @@ export class UserInfo {
     return {
       userName: this._userNameElement.textContent,
       userInfo: this._userInfoElement.textContent,
-      userId: this._userId
+      userId: this._userId,
     }
   }
 
-  setAvatar(userAvatar) {
-    this._userAvatarElement.src = userAvatar;
-  }
-
-  setUserInfo({userName, userInfo, userId}) {
+  setUserInfo({userName, userInfo, userId, userAvatar}) {
     this._userNameElement.textContent = userName;
     this._userInfoElement.textContent = userInfo;
-    this._userId = userId
+    this._userId = userId;
+    this._userAvatarElement.src = userAvatar;
   }
 }
