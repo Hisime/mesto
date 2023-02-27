@@ -30,30 +30,25 @@ const handleCardFormSubmit = (evt, data) => {
         cardsSection.addItem(res, true);
         popupAddCard.close();
       })
-    .finally(() => {
-      popupAddCard.renderLoading();
-    })
     .catch((err) => {
       console.log(err);
+    })
+    .finally(() => {
+      popupAddCard.renderLoading();
     });
 }
 const handleProfileFormSubmit = (evt, data) => {
   popupEditProfile.renderLoading(true);
   api.editProfile({name: data['input-name'], about: data['input-job']})
     .then((res) => {
-      userInfo.setUserInfo({
-        userName: res.name,
-        userInfo: res.about,
-        userId: res._id,
-        userAvatar: res.avatar
-      });
+      userInfo.setUserInfo(res);
       popupEditProfile.close();
-    })
-    .finally(() => {
-      popupEditProfile.renderLoading();
     })
     .catch((err) => {
       console.log(err);
+    })
+    .finally(() => {
+      popupEditProfile.renderLoading();
     });
 }
 
@@ -61,19 +56,14 @@ const handleAvatarFormSubmit = (evt, data) => {
   avatarPopup.renderLoading(true);
   api.changeAvatar(data['avatar-link'])
     .then((res) => {
-      userInfo.setUserInfo({
-        userName: res.name,
-        userInfo: res.about,
-        userId: res._id,
-        userAvatar: res.avatar
-      });
+      userInfo.setUserInfo(res);
       avatarPopup.close()
-    })
-    .finally(() => {
-      avatarPopup.renderLoading();
     })
     .catch((err) => {
       console.log(err);
+    })
+    .finally(() => {
+      avatarPopup.renderLoading();
     });
 }
 
@@ -82,6 +72,9 @@ const handleRemoveCardClick = (confirmAction, id) => {
     api.deleteCard(id).then(() => {
       confirmAction();
       confirmationPopup.close();
+    })
+    .catch((err) => {
+      console.log(err);
     })
   })
 }
@@ -115,13 +108,7 @@ let cardsSection;
 
 Promise.all([api.getUser(), api.getCards()])
   .then(([user, cards]) => {
-    userInfo.setUserInfo({
-      userName: user.name,
-      userInfo: user.about,
-      userId: user._id,
-      userAvatar: user.avatar
-    });
-
+    userInfo.setUserInfo(user);
     cardsSection = new Section({items: cards, renderer: createCard}, '.gallery');
     cardsSection.renderElements();
   })
